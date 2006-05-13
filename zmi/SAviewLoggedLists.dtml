@@ -1,0 +1,52 @@
+<!-- Include std ZMI header -->
+<dtml-var manage_page_header>
+<!-- Include std ZMI Tabs -->
+<dtml-var manage_tabs>
+
+    <H3> GC managment <H3>
+    <dtml-let GCStats=manage_getRequestStats>
+    <table border=1 style="border:1px;color=black">
+        <tr>
+            <th> Nb of Request before next GC Check</th>
+            <th> Last GC Check</th>
+            <th> Next GC in (s) </th>
+            <th> Average Requests/Hour on this Instance </th>
+        </tr>
+        <tr>
+            <td> <dtml-var expr="GCStats[0]"> </td>
+            <td> <dtml-var expr="DateTime(GCStats[1]).toZone('GMT').rfc822()" > </td>
+            <td> <dtml-var expr="GCStats[2]"> </td>
+            <td> <dtml-var expr="GCStats[3]" fmt="**%s**"> </td>
+    </table>
+    </dtml-let>
+    <H3> RAM Logged Lists view</H3>
+    <table>
+        <dtml-let RAMLog="manage_getRAMLoggedList()">
+            <dtml-in expr="RAMLog.keys()" prefix="K">
+                <tr>
+                <td><dtml-var expr="K_index"> -
+                <td><dtml-var expr="K_item">:
+                <td><dtml-var expr="RAMLog[K_item]">
+            </dtml-in>
+        </dtml-let>
+    </table>
+<form action=manage_PurgeRAMLoggedList>
+<input type=submit name=submit value="Clear all RAM Session Data">
+</form>
+<br>
+    <H3> ZODB Logged Lists view</H3>
+    <table>
+        <dtml-let ZODBLog="manage_getZODBLoggedList()">
+            <dtml-in expr="ZODBLog.keys()" prefix="K">
+                <tr>
+                <td><dtml-var expr="K_index"> -
+                <td><dtml-var expr="K_item">:
+                <td><dtml-var expr="ZODBLog[K_item]">
+            </dtml-in>
+        </dtml-let>
+    </table>
+<form action=manage_PurgeZODBLoggedList>
+<input type=submit name=submit value="Clear all ZODB Session Data">
+</form>
+<!-- Include std ZMI footer -->
+<dtml-var manage_page_footer>
